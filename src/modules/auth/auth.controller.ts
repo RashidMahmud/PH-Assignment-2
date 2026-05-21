@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import { sendResponse } from "../../utils/sendResponse";
+import { sendResponse } from "../../utils/sendresponse";
 
 import { authService } from "./auth.service";
 

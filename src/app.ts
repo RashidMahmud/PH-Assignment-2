@@ -13,7 +13,7 @@ app.get("/", (req: Request, res: Response) => {
     author: "Rashid Mahmud",
   });
 });
-app.use("/api/auth",userRoute)
+app.use("/api/auth", userRoute);
 
-app.use(globalErrorHandler)
+app.use(globalErrorHandler);
 export default app;
