@@ -11,15 +11,25 @@ const createIssues = async (req: Request, res: Response) => {
     data: result.rows[0],
   });
 }
-  const getIssuesAll = async (req: Request, res: Response) => {
-  console.log(req.query)
-  const result = await issuesService.getIssuesFromDB(req.query);
+  const getAllIssues = async (req: Request, res: Response) => {
+  console.log(req.query);
+  const result = await issuesService.getAllIssuesFromDB(req.query);
+
   sendResponse(res, 200, {
     message:"Iusses Retrived Successfully",
-    data: result
+    data: result,
+  });
+};
+const getSingleIssues = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const result = await issuesService.getSingleIssuesFromDB(id as string);
+  console.log(result)
+  sendResponse(res, 200, {
+  data: result,
   });
 };
 export const issuesController = {
   createIssues,
-  getIssuesAll,
+  getAllIssues,
+  getSingleIssues,
 }

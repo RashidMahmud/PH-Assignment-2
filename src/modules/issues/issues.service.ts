@@ -1,5 +1,10 @@
 import { pool } from "../../db";
-import type { IIssuePayload, IIssueQueryParams, IReporterMap } from "./issues.interface";
+import type { 
+  IIssuePayload, 
+  IIssueQueryParams, 
+  IReporterMap, 
+  IIssueRow,
+  IReporter, } from "./issues.interface";
 
 const createIssuesIntoDB = async (
   payload: IIssuePayload,
@@ -16,7 +21,7 @@ const createIssuesIntoDB = async (
 
   return result;
 };
-  const getIssuesFromDB = async (queryParams: IIssueQueryParams) => {
+  const getAllIssuesFromDB = async (queryParams: IIssueQueryParams) => {
   const { sort = "newest", type, status } = queryParams;
   
   let queryText = `SELECT * FROM issues WHERE 1=1`;
@@ -50,10 +55,13 @@ const createIssuesIntoDB = async (
     [reporterIds],
   );
   
-  const reporterMap = reportersResult.rows.reduce<IReporterMap>((acc, reporter) => {
-    acc[reporter.id] = reporter;
-    return acc;
-  }, {});
+  const reporterMap = reportersResult.rows.reduce<IReporterMap>(
+    (acc, reporter) => {
+      acc[reporter.id] = reporter;
+      return acc;
+    },
+    {},
+  );
 
   return issues.map(issue => {
     const { reporter_id, ...issueData } = issue;
@@ -63,7 +71,34 @@ const createIssuesIntoDB = async (
     };
   });
 };
+  const getSingleIssuesFromDB = async (id: string) => {
+  const issueResult = await pool.query<IIssueRow>(
+    `SELECT * FROM issues WHERE id = $1`,
+    [id],
+  );
+
+  if (issueResult.rows.length === 0) {
+    return null;
+  }
+
+  const issue = issueResult.rows[0] as IIssueRow;
+
+  const reporterResult = await pool.query<IReporter>(
+    `SELECT id, name, role FROM users WHERE id = $1`,
+    [issue.reporter_id],
+  );
+
+  const reporter = reporterResult.rows[0] || null;
+
+  const { reporter_id, ...issueData } = issue;
+
+  return {
+    ...issueData,
+    reporter: reporter,
+  };
+};
 export const issuesService = {
   createIssuesIntoDB,
-  getIssuesFromDB,
+  getAllIssuesFromDB,
+  getSingleIssuesFromDB,
 };
