@@ -19,11 +19,51 @@ const createIssuesIntoDB = async (
 
   return result;
 };
-const getIssuesFromDB = async () => {
-  const result = await pool.query(`
-      SELECT * FROM issues  
-        `);
-  return result;
+const getIssuesFromDB = async (queryParams: { sort?: string; type?: string; status?: string }) => {
+  
+  const { sort = 'newest', type, status } = queryParams;
+  
+  let queryText = `SELECT * FROM issues WHERE 1=1`;
+  const values: any[] = [];
+  let paramIndex = 1;
+
+  if (type) {
+    queryText += ` AND type = $${paramIndex}`;
+    values.push(type);
+    paramIndex++;
+  }
+  if (status) {
+    queryText += ` AND status = $${paramIndex}`;
+    values.push(status);
+    paramIndex++;
+  }
+
+  queryText += sort === 'oldest' ? ` ORDER BY created_at ASC` : ` ORDER BY created_at DESC`;
+
+  const result = await pool.query(queryText, values);
+  const issues = result.rows;
+
+  if (issues.length === 0) return [];
+
+  const reporterIds = Array.from(new Set(issues.map(issue => issue.reporter_id)));
+  
+  const reportersResult = await pool.query(
+    `SELECT id, name, role FROM users WHERE id = ANY($1)`, 
+    [reporterIds]
+  );
+  
+  const reporterMap = reportersResult.rows.reduce((acc: any, reporter: any) => {
+    acc[reporter.id] = reporter;
+    return acc;
+  }, {});
+
+  return issues.map(issue => {
+    const { reporter_id, ...issueData } = issue;
+    return {
+      ...issueData,
+      reporter: reporterMap[reporter_id] || null
+    };
+  });
 };
 export const issuesService = {
   createIssuesIntoDB,
