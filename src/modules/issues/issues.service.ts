@@ -1,7 +1,8 @@
-import { pool } from "../../db"
+import { pool } from "../../db";
 
-const createIssuesIntoDB=async(payload: {
-  title: string;
+const createIssuesIntoDB = async (
+  payload: {
+    title: string;
     description: string;
     type: "bug" | "feature_request";
   },
@@ -9,7 +10,7 @@ const createIssuesIntoDB=async(payload: {
 ) => {
   const { title, description, type } = payload;
   const result = await pool.query(
-     `INSERT INTO issues (title, description, type, reporter_id)
+    `INSERT INTO issues (title, description, type, reporter_id)
     VALUES ($1, $2, $3, $4)
     RETURNING id, title, description, type, status, reporter_id, created_at, updated_at
     `,
@@ -18,8 +19,13 @@ const createIssuesIntoDB=async(payload: {
 
   return result;
 };
+const getIssuesFromDB = async () => {
+  const result = await pool.query(`
+      SELECT * FROM issues  
+        `);
+  return result;
+};
 export const issuesService = {
   createIssuesIntoDB,
+  getIssuesFromDB,
 };
-  
-

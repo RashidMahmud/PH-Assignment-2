@@ -1,8 +1,7 @@
-import bcryptjs from "bcryptjs";
+import bcrypt from "bcryptjs";
 import { pool } from "../../db";
 import jwt, { type SignOptions } from "jsonwebtoken";
 import config from "../../config";
-import bcrypt from "./../../../node_modules/bcryptjs/index.d";
 const signUpIntoDB = async (payload: any) => {
   const { name, email, password, role } = payload;
   const hashPassword = await bcrypt.hash(password, 10);
