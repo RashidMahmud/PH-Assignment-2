@@ -1,12 +1,9 @@
 import { pool } from "../../db";
+import type { IIssuePayload, IIssueQueryParams, IReporterMap } from "./issues.interface";
 
 const createIssuesIntoDB = async (
-  payload: {
-    title: string;
-    description: string;
-    type: "bug" | "feature_request";
-  },
-  reporterId: string,
+  payload: IIssuePayload,
+  reporterId: number,
 ) => {
   const { title, description, type } = payload;
   const result = await pool.query(
@@ -19,12 +16,11 @@ const createIssuesIntoDB = async (
 
   return result;
 };
-const getIssuesFromDB = async (queryParams: { sort?: string; type?: string; status?: string }) => {
-  
-  const { sort = 'newest', type, status } = queryParams;
+  const getIssuesFromDB = async (queryParams: IIssueQueryParams) => {
+  const { sort = "newest", type, status } = queryParams;
   
   let queryText = `SELECT * FROM issues WHERE 1=1`;
-  const values: any[] = [];
+  const values: (string | number)[] = [];
   let paramIndex = 1;
 
   if (type) {
@@ -45,14 +41,16 @@ const getIssuesFromDB = async (queryParams: { sort?: string; type?: string; stat
 
   if (issues.length === 0) return [];
 
-  const reporterIds = Array.from(new Set(issues.map(issue => issue.reporter_id)));
-  
-  const reportersResult = await pool.query(
-    `SELECT id, name, role FROM users WHERE id = ANY($1)`, 
-    [reporterIds]
+  const reporterIds = Array.from(
+    new Set(issues.map((issue) => issue.reporter_id)),
   );
   
-  const reporterMap = reportersResult.rows.reduce((acc: any, reporter: any) => {
+  const reportersResult = await pool.query(
+    `SELECT id, name, role FROM users WHERE id = ANY($1)`,
+    [reporterIds],
+  );
+  
+  const reporterMap = reportersResult.rows.reduce<IReporterMap>((acc, reporter) => {
     acc[reporter.id] = reporter;
     return acc;
   }, {});
@@ -61,7 +59,7 @@ const getIssuesFromDB = async (queryParams: { sort?: string; type?: string; stat
     const { reporter_id, ...issueData } = issue;
     return {
       ...issueData,
-      reporter: reporterMap[reporter_id] || null
+      reporter: reporterMap[reporter_id] || null,
     };
   });
 };
