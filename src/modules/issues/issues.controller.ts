@@ -23,13 +23,21 @@ const createIssues = async (req: Request, res: Response) => {
 const getSingleIssues = async (req: Request, res: Response) => {
   const { id } = req.params;
   const result = await issuesService.getSingleIssuesFromDB(id as string);
-  console.log(result)
+  // console.log(result)
   sendResponse(res, 200, {
   data: result,
   });
+};
+  const deleteIssues = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  await issuesService.deleteIssueFromDB(id as string);
+  sendResponse(res,200,{
+    message:"Issue deleted successfully"
+  })
 };
 export const issuesController = {
   createIssues,
   getAllIssues,
   getSingleIssues,
+  deleteIssues,
 }
