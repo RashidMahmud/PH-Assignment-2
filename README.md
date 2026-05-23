@@ -2,8 +2,8 @@
 
 ## 🌐 Live Links
 
-🔗 **Backend API Live:** [https://assingment-ii.vercel.app/](https://express-postgres-eight.vercel.app/)
-📂 **GitHub Repository:** [https://github.com/aayasIbrahim/Assignment-2](https://github.com/RashidMahmud/PH-Assignment-2)
+🔗 **Backend API Live:** [https://express-postgres-2s9epsdei-rashidmahmuds-projects.vercel.app/](https://express-postgres-2s9epsdei-rashidmahmuds-projects.vercel.app/)
+📂 **GitHub Repository:** [https://github.com/RashidMahmud/PH-Assignment-2](https://github.com/RashidMahmud/PH-Assignment-2)
 
 ## ✨ Key Features
 
