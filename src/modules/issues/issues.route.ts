@@ -11,6 +11,11 @@ router.post(
 );
 router.get("/", issuesController.getAllIssues);
 router.get("/:id", issuesController.getSingleIssues);
+router.patch(
+  "/:id",
+  auth(USER_ROLE.contributor, USER_ROLE.maintainer),
+  issuesController.updateIssue,
+);
 router.delete(
   "/:id",
   auth(USER_ROLE.maintainer),
