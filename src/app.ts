@@ -10,7 +10,7 @@ const app: Application = express();
 app.use(express.json());
 app.get("/", (req: Request, res: Response) => {
   res.status(200).json({
-    message: "DevPulse Server Runing",
+    message: "DevPulse Server Running",
     author: "Rashid Mahmud",
   });
 });

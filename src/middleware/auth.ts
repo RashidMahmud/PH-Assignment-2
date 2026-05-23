@@ -18,7 +18,7 @@ export const auth = (...roles: Roles[]) => {
       const decoded = jwt.verify(
         token as string,
         config.secret as string,
-      ) as JwtPayload;
+      ) as JwtPayload & { id: number; role: Roles };
       const userData = await pool.query(
         `SELECT id, name, email, role FROM users WHERE email = $1`,
         [decoded.email],

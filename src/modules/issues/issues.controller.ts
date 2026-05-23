@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
 import { issuesService } from "./issues.service";
-import { sendResponse } from "../../utils/sendresponse";
+import { sendResponse } from "../../utils/sendResponse";
 
 const createIssues = async (req: Request, res: Response) => {
   const { user } = req;
@@ -23,7 +23,6 @@ const createIssues = async (req: Request, res: Response) => {
 const getSingleIssues = async (req: Request, res: Response) => {
   const { id } = req.params;
   const result = await issuesService.getSingleIssuesFromDB(id as string);
-  // console.log(result)
   sendResponse(res, 200, {
   data: result,
   });
