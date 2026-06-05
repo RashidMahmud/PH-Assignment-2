@@ -40,12 +40,12 @@ import_dotenv.default.config({
 });
 var config = {
   connection_string: process.env.CONNECTIONSTRING,
-  port: process.env.PORT,
+  port: parseInt(process.env.PORT || "5432", 10),
   secret: process.env.JWT_SECRET,
   refresh_secret: process.env.JWT_REFRESH_SECRET,
-  node_env: process.env.NODE_ENV,
-  access_expires_in: process.env.JWT_ACCESS_EXPIRES_IN || "1d",
-  refresh_expires_in: process.env.JWT_REFRESH_EXPIRES_IN
+  node_env: process.env.NODE_ENV || "development",
+  access_expires_in: process.env.JWT_ACCESS_EXPIRES_IN || "7d",
+  refresh_expires_in: process.env.JWT_REFRESH_EXPIRES_IN || "30d"
 };
 var config_default = config;
 
@@ -113,8 +113,13 @@ var pool = new import_pg.Pool({
   connectionString: config_default.connection_string
 });
 var initDB = async () => {
-  await createScheme();
-  console.log("Database connected successfully!");
+  try {
+    await createScheme();
+    console.log("Database connected successfully!");
+  } catch (error) {
+    console.error("Database initialization failed:", error);
+    throw error;
+  }
 };
 
 // src/modules/auth/auth.service.ts
@@ -462,7 +467,7 @@ var app = (0, import_express3.default)();
 app.use(import_express3.default.json());
 app.get("/", (req, res) => {
   res.status(200).json({
-    message: "DevPulse Server Runing",
+    message: "DevPulse Server Running",
     author: "Rashid Mahmud"
   });
 });
@@ -475,7 +480,7 @@ var app_default = app;
 var main = () => {
   initDB();
   app_default.listen(config_default.port, () => {
-    console.log(`App listening on port ${config_default.port}`);
+    console.log(`Server is running on ${config_default.port}`);
   });
 };
 main();
