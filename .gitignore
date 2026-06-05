@@ -1,1 +1,23 @@
-.vercel
+# Dependencies
+node_modules/
+
+# Environment variables
+.env
+
+# Logs
+*.log
+
+# Build folders
+dist/
+build/
+
+# Coverage reports
+coverage/
+
+# Operating System files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
