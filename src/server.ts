@@ -1,6 +1,12 @@
 import app from "./app";
+import config from "./config";
 import { initDB } from "./db";
 
-initDB();
+const main = () => {
+  initDB();
+  app.listen(config.port, () => {
+    console.log(`Server is running on ${config.port}`);
+  });
+};
 
-export default app;
+main();

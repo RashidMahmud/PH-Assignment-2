@@ -6,6 +6,11 @@ export const pool = new Pool({
 });
 
 export const initDB = async () => {
-  await createScheme();
-  console.log("Database connected successfully!");
+   try {
+    await createScheme();
+    console.log("Database connected successfully!");
+  } catch (error) {
+    console.error("Database initialization failed:", error);
+    throw error;
+  }
 };

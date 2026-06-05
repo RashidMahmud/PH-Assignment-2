@@ -1,5 +1,4 @@
 import { pool } from ".";
-
 export const createScheme = async () => {
   await pool.query(`
 
@@ -14,7 +13,7 @@ export const createScheme = async () => {
         updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
     );
 `);
-await pool.query(`
+  await pool.query(`
   CREATE TABLE IF NOT EXISTS issues (
       id SERIAL PRIMARY KEY,
       title VARCHAR(150) NOT NULL,

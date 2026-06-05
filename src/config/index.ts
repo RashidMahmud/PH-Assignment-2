@@ -7,7 +7,7 @@ dotenv.config({
 
 const config = {
   connection_string: process.env.CONNECTIONSTRING as string,
-  port: parseInt(process.env.PORT || "5000", 10),
+  port: parseInt(process.env.PORT || "5432", 10),
   secret: process.env.JWT_SECRET as string,
   refresh_secret: process.env.JWT_REFRESH_SECRET as string,
   node_env: process.env.NODE_ENV || "development",
