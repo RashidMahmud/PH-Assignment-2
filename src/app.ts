@@ -3,7 +3,7 @@ import express, {
   type Request,
   type Response,
 } from "express";
-import globalErrorHandler from "./middleware/globelErrrHandler";
+import globalErrorHandler from "./middleware/globalErrorHandler";
 import { userRoute } from "./modules/auth/auth.route";
 import { issuesRoute } from "./modules/issues/issues.route";
 const app: Application = express();
